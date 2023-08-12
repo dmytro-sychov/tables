@@ -46,7 +46,7 @@ const ActionCells = () => {
 };
 
 const DataTableHead = (props) => {
-	const { order, orderBy, onRequestSort, headCells, actionsPosition } = props;
+	const { sortDirection, sortField, onRequestSort, headCells, actionsPosition } = props;
 
 	const createSortHandler = (property) => (event) => {
 		onRequestSort(event, property);
@@ -62,15 +62,15 @@ const DataTableHead = (props) => {
 							<TableCell
 								key={headCell.title}
 								align={headCell.columnType === 'text' ? 'left' : 'right'}
-								sortDirection={orderBy === headCell.title ? order : false}>
+								sortDirection={sortField === headCell.title ? sortDirection : false}>
 								<TableSortLabel
-									active={orderBy === headCell.title}
-									direction={orderBy === headCell.title ? order : OrderType.ASC}
+									active={sortField === headCell.title}
+									direction={sortField === headCell.title ? sortDirection : OrderType.ASC}
 									onClick={createSortHandler(headCell.title)}>
 									{headCell.value}
-									{orderBy === headCell.title ? (
+									{sortField === headCell.title ? (
 										<Box component="span" sx={visuallyHidden}>
-											{order === OrderType.DESC ? 'sorted descending' : 'sorted ascending'}
+											{sortDirection === OrderType.DESC ? 'sorted descending' : 'sorted ascending'}
 										</Box>
 									) : null}
 								</TableSortLabel>
@@ -151,16 +151,16 @@ const DataTableCell = ({ headCell, row }) => {
 	);
 };
 
-export function DataTable({ rows, headCells, tableName, actionsPosition }) {
-	const [order, setOrder] = useState(null);
-	const [orderBy, setOrderBy] = useState(null);
+export function DataTable(props) {
+	const { rows, headCells, tableName, actionsPosition, sortDirection, setSortDirection, sortField, setSortField, filters, setFilters } = props;
+
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
 
 	const handleRequestSort = (event, property) => {
-		const isAsc = orderBy === property && order === OrderType.ASC;
-		setOrder(isAsc ? OrderType.DESC : OrderType.ASC);
-		setOrderBy(property);
+		const isAsc = sortField === property && sortDirection === OrderType.ASC;
+		setSortDirection(isAsc ? OrderType.DESC : OrderType.ASC);
+		setSortField(property);
 	};
 
 	const handleChangePage = (event, newPage) => {
@@ -176,8 +176,8 @@ export function DataTable({ rows, headCells, tableName, actionsPosition }) {
 	const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
 	const visibleRows = useMemo(
-		() => rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(order, orderBy)),
-		[order, orderBy, page, rows, rowsPerPage]
+		() => rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).sort(getComparator(sortDirection, sortField)),
+		[sortDirection, sortField, page, rows, rowsPerPage]
 	);
 
 	return (
@@ -187,8 +187,8 @@ export function DataTable({ rows, headCells, tableName, actionsPosition }) {
 				<TableContainer>
 					<Table sx={{ minWidth: 750 }} aria-labelledby="tableTitle" size="medium">
 						<DataTableHead
-							order={order}
-							orderBy={orderBy}
+							sortDirection={sortDirection}
+							sortField={sortField}
 							onRequestSort={handleRequestSort}
 							rowCount={rows.length}
 							headCells={headCells}
