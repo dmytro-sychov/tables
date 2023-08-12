@@ -117,7 +117,7 @@ const DataTableCell = ({ headCell, row }) => {
 	}
 
 	return (
-		<TableCell key={headCell.title} align={headCell.columnType === 'text' ? 'left' : 'right'} verticalAlign="tmiddle">
+		<TableCell align={headCell.columnType === 'text' ? 'left' : 'right'}>
 			{avatarUrl && (
 				<Box sx={{ display: 'inline', mr: '0.5rem' }}>
 					<img src={avatarUrl} alt={avatarContent} width="32" height="32" />
@@ -207,7 +207,7 @@ export function DataTable(props) {
 												);
 											}
 
-											return <DataTableCell headCell={headCell} row={row} />;
+											return <DataTableCell key={headCell.title} headCell={headCell} row={row} />;
 										})}
 									</TableRow>
 								);
