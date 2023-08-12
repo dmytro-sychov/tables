@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import Container from '@mui/material/Container';
+import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router';
+import { BrowserRouter, Outlet, Route, Routes } from 'react-router-dom';
+import { Header } from './components/Header';
+import { Main } from './components/Main';
+import { CustomersPage } from './components/pages/CustomersPage';
+import { SuppliersPage } from './components/pages/SuppliersPage';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Layout />}>
+					<Route path="suppliers" element={<SuppliersPage />} />
+					<Route path="customers" element={<CustomersPage />} />
+				</Route>
+			</Routes>
+		</BrowserRouter>
+	);
+};
+
+const Layout = () => {
+	const location = useLocation();
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (location.pathname === '/') {
+			navigate('/suppliers');
+		}
+	}, [location, navigate]);
+
+	return (
+		<Container className="App" maxWidth="xl">
+			<Header />
+			<Main>
+				<Outlet />
+			</Main>
+		</Container>
+	);
+};
 
 export default App;
