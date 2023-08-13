@@ -2,6 +2,7 @@ import Typography from '@mui/material/Typography';
 import { NavLink } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
+import { pages } from './utils/pages';
 
 export const Header = () => {
 	return (
@@ -11,30 +12,20 @@ export const Header = () => {
 			</Typography>
 			<Box component="nav">
 				<Stack direction="row" spacing={3} component="ul" sx={{ listStyle: 'none' }}>
-					<Box component="li">
-						<NavLink
-							to="/suppliers"
-							style={({ isActive }) => {
-								return {
-									textDecoration: 'none',
-									fontWeight: isActive ? '700' : '400',
-								};
-							}}>
-							Suppliers
-						</NavLink>
-					</Box>
-					<Box component="li">
-						<NavLink
-							to="/customers"
-							style={({ isActive }) => {
-								return {
-									textDecoration: 'none',
-									fontWeight: isActive ? '700' : '400',
-								};
-							}}>
-							Customers
-						</NavLink>
-					</Box>
+					{pages.map(({ path, title }) => (
+						<Box component="li" key={path}>
+							<NavLink
+								to={path}
+								style={({ isActive }) => {
+									return {
+										textDecoration: 'none',
+										fontWeight: isActive ? '700' : '400',
+									};
+								}}>
+								{title}
+							</NavLink>
+						</Box>
+					))}
 				</Stack>
 			</Box>
 		</Box>
